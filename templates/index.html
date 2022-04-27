@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+
+{% block content %}
+  <h1>Movie Recommendation System</h1>
+  <h2>Collaborative based Recommendations</h2>
+  <!-- Main Input For Receiving Query to our ML -->
+  
+  <form action="/predict1" method="post">
+    <p>Movie you liked* : </p>
+    <p><input type="text" name="m_nm" placeholder="movie name"/></p>
+    <p>Actor : </p>
+    <p><input type="text" name="act_nm" placeholder="Actor"/></p>
+    <p>Total movie suggestions req : </p>
+    <p><input type="number" name="suggest" placeholder="value > 0"></p>
+    <button type="submit" value="submit">Submit</button>
+  </form>
+</br>
+  <h2>Genre based Recommendations</h2>
+  <form action="/predict2" method="post">
+    <p>Genre* : </p>
+    <p><input type="text" name="gnr" placeholder="genre" /></p>
+    <p>Total movie suggestions req : </p>
+    <p><input type="number" name="suggest" placeholder="value > 0"></p>
+    <button type="submit" value="submit">Submit</button>
+  </form>
+</br>
+<h2>Top rated Movie Recommendation</h2>
+  <form action="/predict3" method="post">
+    <p>Total movie suggestions req : </p>
+    <p><input type="number" name="suggest" placeholder="value > 0"></p>
+    <button type="submit" value="submit">Submit</button>
+  </form>  
+{% endblock content %}
