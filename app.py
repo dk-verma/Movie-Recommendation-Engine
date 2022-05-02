@@ -2,7 +2,8 @@
 from flask import Flask, render_template, redirect, url_for, request
 from flask_bootstrap import Bootstrap
 # import recommendation as src
-from recommendation import bestRatingNMovies, collabRecommendation, genreBestNMovies
+# from recommendation import bestRatingNMovies, contentRecommendation, genreBestNMovies
+from temp import bestRatingNMovies, contentRecommendation, genreBestNMovies
 # from flask_ngrok import run_with_ngrok
 
 app = Flask(__name__)
@@ -21,11 +22,13 @@ def predict1():
     if request.method == 'POST':
         if request.form["suggest"]:
             total = int(request.form["suggest"])
+            if total<0:
+                total=0
         else:
             total= 5
         # df = bestRatingNMovies(total)
         name = request.form["m_nm"]
-        df = collabRecommendation(name,total)
+        df = contentRecommendation(name,total)
 
         return render_template('base.html',tables=[df.to_html(classes='data')], titles=['1'])
 
@@ -37,6 +40,8 @@ def predict2():
     if request.method == 'POST':
         if request.form["suggest"]:
             total = int(request.form["suggest"])
+            if total<0:
+                total=0
         else:
             total= 5
         genre = request.form["gnr"]
@@ -52,6 +57,8 @@ def predict3():
     if request.method == 'POST':
         if request.form["suggest"]:
             total = int(request.form["suggest"])
+            if total<0:
+                total=0
         else:
             total= 5
         df = bestRatingNMovies(total)

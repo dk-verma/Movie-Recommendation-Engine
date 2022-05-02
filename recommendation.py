@@ -1,49 +1,43 @@
 from operator import ge
-from shutil import move
+# from shutil import move
 import pandas as pd
-import numpy as np
-# for closed match movies
+# import numpy as np
 import difflib
 # for convert text to numerical feature vector
-import sklearn
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 
-movies_data = pd.read_csv('/Users/deepakverma/Desktop/DataScience/movie_app/movies.csv', index_col = 'index')
+movies_data = pd.read_csv('./movies.csv', index_col = 'index')
 
 # print(movies_data.head())
-
 selected_features = ['genres','keywords','tagline','vote_average','cast','director','overview']
-
 #replacing null values with null string
 for feature in selected_features:
   movies_data[feature]=movies_data[feature].fillna('')
-
 # print(movies_data[selected_features].info())
-
 combined_features = movies_data['genres']+movies_data['keywords']+movies_data['tagline']+movies_data['cast']+movies_data['director']+movies_data['overview']
 features=pd.DataFrame(combined_features)
 features.columns=['text']
-
 #combining text data to feature vectors
 vectorizer = TfidfVectorizer()
 # can use Series 'combined_features' as well
 feature_vector = vectorizer.fit_transform(features['text'])
 # print(feature_vector)
-
 similarity = cosine_similarity(feature_vector)
 # print(similarity)
 
+# similarity = pd.read_csv('/Users/deepakverma/Desktop/DataScience/movieData/similarity.csv')
+
 #movie name list present in our Dataset
+#dummy comment
 list_of_all_titles = movies_data['title'].tolist()
 # print(list_of_all_titles)
 
-def collabRecommendation(movie_name, total):
+def contentRecommendation(movie_name, total):
   try:
     #movie name list present in our Dataset
     find_close_match = difflib.get_close_matches(movie_name,list_of_all_titles)
     close_match = find_close_match[0]
-
     # finding index of close_match in movies_data
     index = movies_data[movies_data.title==close_match].index.values[0]
 
@@ -55,7 +49,7 @@ def collabRecommendation(movie_name, total):
     df = df.sort_values(by=['similarity'], ascending=False)
 
     # printing name of the similar movies using index from the similarity score
-    print('top ', total, ' movies suggested for you are : ')
+    # print('top ', total, ' movies suggested for you are : ')
     df = pd.DataFrame(df.title[:total])
     df.rename(columns = {'title':'Movie Name'}, inplace = True)
     df.reset_index(drop=True, inplace=True)
@@ -69,7 +63,7 @@ def collabRecommendation(movie_name, total):
 # movie_name = input('enter your fav movie name : ')
 # total = int(input('recommendations req : '))
 # movie_name, total = "iron man", 5
-# print(collabRecommendation(movie_name, total))
+# print(contentRecommendation(movie_name, total))
 
 def bestRatingNMovies(total):
   try:
@@ -89,7 +83,8 @@ def bestRatingNMovies(total):
     
 #user choice for N most rated movies
 # suggest_req = int(input('number of top rated movie recommendations req : '))
-# bestRatingNMovies(suggest_req)
+# suggest_req = 8
+# print(bestRatingNMovies(suggest_req))
 
 def genreBestNMovies(genre_req,total):
   try:
@@ -106,7 +101,7 @@ def genreBestNMovies(genre_req,total):
     movieN.rename(columns = {'title':'Movie Name','vote_average':'User Ratings'}, inplace = True)
     movieN.reset_index(drop=True, inplace=True)
     movieN.index = movieN.index+1
-    print(movieN)
+    # print(movieN)
     # print('top ', total, ' movies suggested for you are : ')
     # print(movieN.to_string(index=False))
     return movieN
@@ -116,5 +111,6 @@ def genreBestNMovies(genre_req,total):
 #user choice for N most rated movies
 # genre_req = input('enter your fav movie name : ')
 # total = int(input('number of top rated movie recommendations req : '))
-genre_req , total = 'Action',9
-genreBestNMovies(genre_req,total)
+# print("################ Genre Based System #############")
+# genre_req , total = 'Action',8
+# genreBestNMovies(genre_req,total)
